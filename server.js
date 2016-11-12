@@ -12,8 +12,8 @@ var sequelizeConnection = models.sequelize;
 sequelizeConnection.query('SET FOREIGN_KEY_CHECKS = 0')
 // make our tables
 .then(function(){
-  return sequelizeConnection.sync({force:true})
-  console.log("not broken yet");
+  // return sequelizeConnection.sync({force:true})
+  console.log("Not resetting the database");
 })
 
 // Serve static content for the app from the "public" directory in the application directory.

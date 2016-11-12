@@ -24,7 +24,7 @@ app.get('/burgers', function (req, res) {
 		console.log("********************");
 		console.log("Returning data from database");
 		console.log("********************");
-		console.log(response);
+		console.log(response[0]);
   	res.render('index', response );
   })
 })
