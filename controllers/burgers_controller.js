@@ -1,17 +1,11 @@
 /*
-Here is where you create all the functions that will do the routing for your app, and the logic of each route.
+Create the functions that will do the routing for your app, and the logic of each route.
 */
 var express = require('express');
-// var router = express.Router();
 var app = express();
-// var burger = require('../models/burger.js');
 
 var models = require('../models');
 var sequelizeConnection = models.sequelize;
-
-// TODO: Sync our models
-// models.sequelize.sync({force: true})
-// console.log(models);
 
 app.get('/', function (req, res) {
 	console.log('root access requested');
@@ -19,31 +13,45 @@ app.get('/', function (req, res) {
 });
 
 app.get('/burgers', function (req, res) {
+	console.log('burgers access requested');
 	models.Burger.findAll({})
-	.then(function(response){
-		console.log("********************");
-		console.log("Returning data from database");
-		console.log("********************");
-		console.log(response[0]);
-  	res.render('index', response );
+	.then(function(allBurgers){
+
+		var burgerObject = { burgers: allBurgers};
+
+		res.render('index', burgerObject);
   })
 })
 
 
 app.post('/burgers/create', function (req, res) {
-	// burger.create([req.body.newBurgerName], function () {
-	// 	res.redirect('/burgers');
-	// });
+	console.log('Create burger requested');
+	models.Burger.create(
+	{
+		burger_name: req.body.newBurgerName,
+		devoured: false
+	})
+	.then(function(allBurgers){
+		res.redirect('/burgers');
+	});
 });
 
 app.put('/burgers/update/:id', function (req, res) {
-	// var condition = req.params.id;
+	console.log('Burger being devoured');
+	var condition = req.params.id;
+	
+	//search for condition in id field
+	models.Burger.findOne({ where: {id: condition} })
+	.then(function(id) {
 
-	// console.log('condition ', condition);
+	//update devoured to true
+	  id.updateAttributes({
+      devoured: true
+    })
+    //reload page
+    res.redirect('/burgers');
+	})
 
-	// burger.update(req.params.id, function () {
-	// 	res.redirect('/burgers');
-	// });
 });
 
 module.exports = app;
